@@ -109,6 +109,15 @@
             <p class="panel-label">Continuity tape</p>
             <ol class="tape" id="tape-list"><li class="empty">Empty buffer</li></ol>
           </article>
+          <article class="panel panel-formal">
+            <p class="panel-label">Σ-PAS / InfiniGen gate</p>
+            <p class="formal-note">Soft client gate — not Lean/Z3-backed. COMMIT requires S ≥ floor and D_I ≤ ε.</p>
+            <div class="mutate-row">
+              <button type="button" class="btn ghost" id="btn-mutate-safe">Propose safe refine</button>
+              <button type="button" class="btn ghost" id="btn-mutate-risky">Propose aggressive drift</button>
+            </div>
+            <ul class="commit-log metric-list" id="commit-log"><li class="empty">No architecture mutations yet</li></ul>
+          </article>
         </div>
       </div>
 
