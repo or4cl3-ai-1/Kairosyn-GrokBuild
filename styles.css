@@ -360,14 +360,29 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
     grid-template-areas:
       "hept metrics"
       "arch glyphs"
-      "tape tape";
+      "tape formal";
   }
   .panel-hept { grid-area: hept; }
   .panel-metrics { grid-area: metrics; }
   .panel-arch { grid-area: arch; }
   .panel-glyphs { grid-area: glyphs; }
   .panel-tape { grid-area: tape; }
+  .panel-formal { grid-area: formal; }
 }
+.formal-note {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin: 0 0 0.75rem;
+  line-height: 1.4;
+}
+.mutate-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.commit-log li.commit-ok .k { color: var(--cyan); }
+.commit-log li.commit-rej .k { color: var(--amber); }
 .panel {
   background: var(--surface);
   border-radius: var(--radius);
