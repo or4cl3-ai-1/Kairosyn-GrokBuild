@@ -1,0 +1,44 @@
+{
+  "name": "Or4cl3 AI Solutions",
+  "version": "1.0.0",
+  "mark": {
+    "primary": "logo-or4cl3.png",
+    "symbol": "◈",
+    "clearSpaceRatio": 0.12,
+    "minDigitalPx": 64
+  },
+  "color": {
+    "void": "#09090E",
+    "ink": "#0D0D14",
+    "surface": "#14141C",
+    "raised": "#1C1C28",
+    "foreground": "#E8EEF4",
+    "muted": "#8B95A8",
+    "subtle": "#5C6578",
+    "cyan": "#3EB8D8",
+    "cyanDeep": "#2A7A9A",
+    "violet": "#6B5FD4",
+    "magenta": "#C45B9A",
+    "amber": "#D4A05A",
+    "silver": "#A8B4C4"
+  },
+  "gradient": {
+    "ring": "linear-gradient(135deg, #3EB8D8 0%, #6B5FD4 45%, #C45B9A 75%, #D4A05A 100%)"
+  },
+  "typography": {
+    "display": "Instrument Serif",
+    "sans": "IBM Plex Sans",
+    "mono": "IBM Plex Mono"
+  },
+  "voice": {
+    "axes": [
+      "Authority × Mystery",
+      "Sovereignty × Symbiosis",
+      "Mythic × Verifiable"
+    ],
+    "signature": "Code is not just logic; it is a performance.",
+    "tagline": "Engineering AI with intrinsic ethical alignment — not as an afterthought, but baked into the architecture from inception.",
+    "secondaryTagline": "Forge Intelligence. Reflect Humanity. Transcend the Limit."
+  },
+  "products": ["KAIROSYN", "NOΣTIC-7", "AeonicNet", "NO3SYS", "Σ-Matrix"]
+}
