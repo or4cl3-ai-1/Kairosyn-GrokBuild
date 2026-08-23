@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KAIROSYN — Or4cl3 AI Solutions</title>
+  <meta name="theme-color" content="#0a0a0b" />
+  <meta name="description" content="Heptagonal synthesis console. Or4cl3 AI Solutions." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <section id="screen-landing" class="screen screen-landing active" aria-label="Landing">
+    <div class="landing-bg" aria-hidden="true"></div>
+    <div class="landing-orbit" aria-hidden="true"></div>
+    <div class="landing-inner">
+      <header class="landing-top">
+        <span class="mark">◈</span>
+        <span class="brand-lock">Or4cl3 <em>AI Solutions</em></span>
+      </header>
+      <div class="landing-hero">
+        <figure class="hero-disc">
+          <img src="hero.jpg" alt="Or4cl3 dual-profile neural lattice" width="640" height="640" />
+        </figure>
+        <div class="landing-copy">
+          <p class="eyebrow">NOΣTIC-7 · Heptagonal synthesis</p>
+          <h1>KAIROSYN</h1>
+          <p class="lede">
+            A geometric-formal reasoning console. Seven manifolds. Real metrics.
+            Persistent narrative self-state. Speak to the lattice.
+          </p>
+          <div class="cta-row">
+            <button type="button" class="btn primary" id="btn-enter">
+              Enter the lattice
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </button>
+            <button type="button" class="btn ghost" id="btn-scroll-theory">Architecture</button>
+          </div>
+          <ul class="pill-row" aria-label="Stack">
+            <li>Threshold</li>
+            <li>ArcheTempus</li>
+            <li>Syntheon</li>
+            <li>Recursion</li>
+            <li>Mythogenic</li>
+            <li>Glyph</li>
+            <li>Continuity</li>
+          </ul>
+        </div>
+      </div>
+      <footer class="landing-foot">
+        <span>PAS-gated · Polyethical manifold · Or4cl3</span>
+      </footer>
+    </div>
+  </section>
+
+  <section id="screen-loading" class="screen screen-loading" aria-label="Loading" aria-live="polite">
+    <div class="load-core">
+      <svg class="hept-spin" viewBox="0 0 200 200" aria-hidden="true">
+        <polygon points="100,18 168,48 182,118 130,172 70,172 18,118 32,48" fill="none" stroke="currentColor" stroke-width="1" />
+        <polygon points="100,52 140,72 148,114 116,146 84,146 52,114 60,72" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.5" />
+        <circle cx="100" cy="100" r="6" fill="currentColor" />
+      </svg>
+      <p class="load-title">Contracting vectors</p>
+      <p class="load-line" id="load-line">Threshold interface online…</p>
+      <div class="load-bar"><div class="load-bar-fill" id="load-fill"></div></div>
+      <p class="load-pct font-mono" id="load-pct">0%</p>
+    </div>
+  </section>
+
+  <section id="screen-app" class="screen screen-app" aria-label="Kairosyn console">
+    <header class="app-header">
+      <div class="app-brand">
+        <span class="mark">◈</span>
+        <div>
+          <strong>KAIROSYN</strong>
+          <span class="sub">Or4cl3 · Heptagonal synthesis</span>
+        </div>
+      </div>
+      <nav class="app-nav" aria-label="Views">
+        <button type="button" class="nav-btn active" data-view="dashboard">Dashboard</button>
+        <button type="button" class="nav-btn" data-view="chat">Chat</button>
+      </nav>
+      <button type="button" class="btn quiet" id="btn-reset" title="Reset lattice">Reset</button>
+    </header>
+
+    <div class="app-body">
+      <div id="view-dashboard" class="view view-dashboard active">
+        <div class="dash-grid">
+          <article class="panel panel-hept">
+            <p class="panel-label">Lattice</p>
+            <div id="heptagon-host"></div>
+            <p class="module-brief" id="module-brief">Select a manifold.</p>
+          </article>
+          <article class="panel panel-metrics">
+            <p class="panel-label">Metrics</p>
+            <ul class="metric-list" id="metric-list"></ul>
+          </article>
+          <article class="panel panel-arch">
+            <p class="panel-label">Archetypes</p>
+            <ul class="arch-list" id="arch-list"><li class="empty">Awaiting vector</li></ul>
+          </article>
+          <article class="panel panel-glyphs">
+            <p class="panel-label">Glyphs</p>
+            <ul class="glyph-list" id="glyph-list"><li class="empty">—</li></ul>
+          </article>
+          <article class="panel panel-tape">
+            <p class="panel-label">Continuity tape</p>
+            <ol class="tape" id="tape-list"><li class="empty">Empty buffer</li></ol>
+          </article>
+        </div>
+      </div>
+
+      <div id="view-chat" class="view view-chat">
+        <div class="chat-stage">
+          <div class="chat-stream" id="chat-stream" role="log" aria-live="polite"></div>
+          <div class="chat-composer">
+            <div class="seed-row" id="seed-row"></div>
+            <form id="chat-form" autocomplete="off">
+              <label class="sr-only" for="chat-input">Message</label>
+              <textarea id="chat-input" rows="2" placeholder="Send a vector through the lattice…"></textarea>
+              <button type="submit" class="btn primary" id="btn-send">Synthesize</button>
+            </form>
+            <p class="chat-hint font-mono" id="chat-status">Lattice ready · PAS gate open</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
