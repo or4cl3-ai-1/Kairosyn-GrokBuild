@@ -7,14 +7,14 @@
   ];
 
   const LOAD_LINES = [
-    "Threshold interface online\u2026",
-    "ArcheTempus priors loading\u2026",
-    "Syntheon fusion binding\u2026",
-    "Recursion lattice spinning\u2026",
-    "Mythogenic bank active\u2026",
-    "Glyph synthesis ready\u2026",
-    "Continuity buffer warm\u2026",
-    "PAS gate calibrated\u2026",
+    "Threshold interface online…",
+    "ArcheTempus priors loading…",
+    "Syntheon fusion binding…",
+    "Recursion lattice spinning…",
+    "Mythogenic bank active…",
+    "Glyph synthesis ready…",
+    "Continuity buffer warm…",
+    "PAS gate calibrated…",
   ];
 
   const state = {
@@ -98,7 +98,7 @@
   function updateModuleBrief() {
     const mod = Kairosyn.MODULES.find((m) => m.id === state.selectedModule) || Kairosyn.MODULES[0];
     const el = $("#module-brief");
-    if (el) el.textContent = `${mod.name} \u00b7 ${mod.theory}. ${mod.brief}`;
+    if (el) el.textContent = `${mod.name} · ${mod.theory}. ${mod.brief}`;
   }
 
   function renderMetrics(metrics) {
@@ -140,7 +140,7 @@
         (e) => `<li class="${e.commitOrReject === "COMMIT" ? "commit-ok" : "commit-rej"}">
           <span class="k">${e.commitOrReject}</span>
           <span>${escapeHtml(e.candidateArchitecture)}</span>
-          <span class="w">S ${Number(e.pasBefore).toFixed(2)}\u2192${Number(e.pasAfter).toFixed(2)} \u00b7 D_I ${Number(e.identityDistance).toFixed(3)}</span>
+          <span class="w">S ${Number(e.pasBefore).toFixed(2)}→${Number(e.pasAfter).toFixed(2)} · D_I ${Number(e.identityDistance).toFixed(3)}</span>
         </li>`
       )
       .join("");
@@ -163,7 +163,7 @@
     const list = $("#glyph-list");
     if (!list) return;
     if (!glyphs || !glyphs.length) {
-      list.innerHTML = `<li class="empty">\u2014</li>`;
+      list.innerHTML = `<li class="empty">—</li>`;
       return;
     }
     list.innerHTML = glyphs
@@ -183,7 +183,7 @@
       .map(
         (t) => `<li>
           <p class="prompt">${escapeHtml(t.prompt)}</p>
-          <p class="meta">${t.synthesis.sigmaCheck} \u00b7 PAS ${t.metrics.pas.toFixed(3)} \u00b7 ${t.archetypes[0]?.name || "\u2014"}</p>
+          <p class="meta">${t.synthesis.sigmaCheck} · PAS ${t.metrics.pas.toFixed(3)} · ${t.archetypes[0]?.name || "—"}</p>
         </li>`
       )
       .join("");
@@ -191,10 +191,10 @@
 
   function escapeHtml(s) {
     return String(s)
-      .replace(/&/g, "&")
-      .replace(/</g, "<")
-      .replace(/>/g, ">")
-      .replace(/"/g, """);
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   }
 
   function latestMetrics() {
@@ -231,8 +231,8 @@
     const status = $("#chat-status");
     if (status) {
       status.textContent = result.commit
-        ? `InfiniGen COMMIT \u00b7 ${name} \u00b7 S=${result.nextS.toFixed(3)}`
-        : `InfiniGen REJECT \u00b7 ${name} \u00b7 gate failed (PAS/D_I)`;
+        ? `InfiniGen COMMIT · ${name} · S=${result.nextS.toFixed(3)}`
+        : `InfiniGen REJECT · ${name} · gate failed (PAS/D_I)`;
     }
   }
 
@@ -259,7 +259,7 @@
 
     bot.innerHTML = `
       <div class="bubble">
-        <p class="who">KAIROSYN \u00b7 ${turn.synthesis.source.toUpperCase()}</p>
+        <p class="who">KAIROSYN · ${turn.synthesis.source.toUpperCase()}</p>
         <p class="body">${escapeHtml(turn.synthesis.response)}</p>
         <dl class="state">
           <dt>Biophase lock</dt>
@@ -293,7 +293,7 @@
     refreshDashboard();
     const status = $("#chat-status");
     if (status) {
-      status.textContent = `PAS ${result.metrics.pas.toFixed(3)} \u00b7 ${synthesis.sigmaCheck} \u00b7 ${result.archetypes[0]?.name || "Self"}`;
+      status.textContent = `PAS ${result.metrics.pas.toFixed(3)} · ${synthesis.sigmaCheck} · ${result.archetypes[0]?.name || "Self"}`;
     }
   }
 
@@ -314,7 +314,7 @@
       }
       if (progress >= 100) {
         clearInterval(iv);
-        if (line) line.textContent = "Lattice locked. Entering console\u2026";
+        if (line) line.textContent = "Lattice locked. Entering console…";
         setTimeout(() => {
           showScreen("screen-app");
           setView("dashboard");
@@ -366,7 +366,7 @@
       state.turns = [];
       $("#chat-stream").innerHTML = "";
       const status = $("#chat-status");
-      if (status) status.textContent = "Lattice reset \u00b7 PAS gate open";
+      if (status) status.textContent = "Lattice reset · PAS gate open";
       refreshDashboard();
     });
 
