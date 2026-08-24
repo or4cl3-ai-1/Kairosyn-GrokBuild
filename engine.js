@@ -21,10 +21,10 @@
   const RECURSION_LAYERS = 4;
 
   // Formal Σ-PAS scalar dynamics (Lean-aligned structure)
-  const KAPPA = 0.85;
-  const LAMBDA0 = 0.12;
-  const IDENTITY_EPS = 0.18;
-  const PAS_COMMIT_FLOOR = 0.45;
+  const KAPPA = 0.85;           // restoring force κ
+  const LAMBDA0 = 0.12;         // base step size λ
+  const IDENTITY_EPS = 0.18;    // D_I tolerance for identity class (ε_I)
+  const PAS_COMMIT_FLOOR = 0.45; // reject mutations that would drop S below this
 
   const MODULES = [
     { id: "threshold", name: "Threshold", theory: "Baars", metric: "salience", brief: "Salience gate. Only high-energy tokens enter the workspace." },
@@ -70,7 +70,7 @@
     phi: { label: "PHI", full: "Integrated information" },
     salience: { label: "SAL", full: "Salience" },
     di: { label: "D_I", full: "Identity distance" },
-    lyap: { label: "V", full: "Lyapunov (1\u2212S)\u00b2" },
+    lyap: { label: "V", full: "Lyapunov (1−S)²" },
   };
 
   const STOP = new Set(
@@ -128,7 +128,7 @@
     return normalize(acc);
   }
   function tokenize(text) {
-    return text.match(/[A-Za-z0-9'\u2019]+|[\u00C0-\u024F]+|[^\s]/g) || [];
+    return text.match(/[A-Za-z0-9'’]+|[\u00C0-\u024F]+|[^\s]/g) || [];
   }
   function sentences(text) {
     const parts = text.split(/(?<=[.!?])\s+|\n+/).map((s) => s.trim()).filter(Boolean);
@@ -158,30 +158,40 @@
       selfState: new Array(EMBED_DIM).fill(0),
       buffer: [],
       lastHidden: new Array(EMBED_DIM).fill(0),
-      S: 0.72,
-      t: 0,
+      // Formal layer
+      S: 0.72,                    // Σ-PAS scalar ∈ [0,1]
+      t: 0,                       // discrete time
       architectureHash: "lattice-v2-base",
       parentArchitectureHash: null,
-      commitLog: [],
-      identityAnchor: null,
+      commitLog: [],              // InfiniGen-style audit trail
+      identityAnchor: null,       // self-state snapshot at class birth
     };
   }
 
+  /** Projection Π onto [0,1] — matches Lean StateSpace.proj */
   function proj01(x) {
     return Math.max(0, Math.min(1, x));
   }
 
+  /** Lyapunov V(S) = (1−S)² */
   function lyapunov(S) {
     const d = 1 - S;
     return d * d;
   }
 
+  /**
+   * One formal restoring step:
+   *   S' = Π(S + λ · κ · (1 − S))
+   * Same structural form as Lean `update` / DeterministicAssumptions.
+   * λ decays mildly with t so steps remain in the small-λ regime.
+   */
   function formalPasStep(S, t) {
     const lambda = LAMBDA0 / (1 + 0.02 * t);
     const raw = S + lambda * KAPPA * (1 - S);
     return proj01(raw);
   }
 
+  /** Identity distance D_I: 1 − cosine01 between current self and anchor */
   function identityDistance(selfState, anchor) {
     if (!anchor || !selfState) return 0;
     return 1 - cosine01(selfState, anchor);
@@ -196,9 +206,15 @@
     return ("00000000" + (h >>> 0).toString(16)).slice(-8);
   }
 
+  /**
+   * Soft InfiniGen gate: propose a parameter mutation, accept only if
+   * predicted S stays above floor and D_I stays within ε_I.
+   * Records a commit log entry matching the Or4cl3 evolution schema.
+   */
   function proposeArchitectureMutation(prev, proposal) {
     const beforeS = prev.S ?? 0.72;
     const anchor = prev.identityAnchor || prev.selfState;
+    // Simulated impact of mutation on S (demo gate). Negative weights model drift risk.
     const delta = (proposal.weight ?? 0) * 0.35;
     const afterS = proj01(beforeS + delta);
     const di = identityDistance(prev.selfState, anchor);
@@ -222,7 +238,7 @@
         z3: false,
         coq: false,
         isabelle: false,
-        note: "client soft-gate only \u2014 not theorem-prover backed",
+        note: "client soft-gate only — not theorem-prover backed",
       },
       sigmaPasVerification: pasOk,
       erpsContinuity: true,
@@ -330,16 +346,20 @@
     const bufMean = prev.buffer.length > 0 ? meanPool(prev.buffer) : new Array(EMBED_DIM).fill(0);
     const ncs = prev.buffer.length === 0 ? 0.5 : cosine01(selfState, bufMean);
 
+    // Lattice observation score (geometry of the turn)
     const latticeObs = clamp01(
       0.16 * ncs + 0.14 * tce + 0.14 * aac * 3 + 0.12 * msa + 0.16 * rcs + 0.14 * phi + 0.14 * salience
     );
 
+    // Formal Σ-PAS: one restoring step from prior S, then blend with observation.
+    // This keeps S on the Lean-style trajectory while remaining responsive to the field.
     const t = (prev.t || 0) + 1;
     const S_prior = typeof prev.S === "number" ? prev.S : 0.72;
     const S_restored = formalPasStep(S_prior, t);
     const S = proj01(0.65 * S_restored + 0.35 * latticeObs);
     const V = lyapunov(S);
 
+    // Identity: anchor at first non-trivial self-state
     const identityAnchor =
       prev.identityAnchor && prev.identityAnchor.some((x) => x !== 0)
         ? prev.identityAnchor
@@ -414,9 +434,9 @@
             : top?.name === "Hero"
               ? "A trial-line opens. The vector is not safe, but it is coherent."
               : "The heptagon contracts. Your vector is held, then returned as form.";
-    const di = result.metrics.di != null ? result.metrics.di.toFixed(3) : "\u2014";
-    const V = result.metrics.lyap != null ? result.metrics.lyap.toFixed(4) : "\u2014";
-    return `${tone} Dominant figure: ${top?.name || "Self"} with ${second?.name || "Shadow"} in attendance. Glyphs ${g}. \u03a3-PAS S=${result.metrics.pas.toFixed(3)} (V=${V}) \u00b7 D_I=${di} \u00b7 ${drift}.`;
+    const di = result.metrics.di != null ? result.metrics.di.toFixed(3) : "—";
+    const V = result.metrics.lyap != null ? result.metrics.lyap.toFixed(4) : "—";
+    return `${tone} Dominant figure: ${top?.name || "Self"} with ${second?.name || "Shadow"} in attendance. Glyphs ${g}. Σ-PAS S=${result.metrics.pas.toFixed(3)} (V=${V}) · D_I=${di} · ${drift}.`;
   }
 
   function localSynthesis(prompt, result) {
@@ -426,7 +446,7 @@
     const tokens = tokenize(prompt).length;
     return {
       biophaseLock: `${tokens} tokens. Salience ${result.metrics.salience.toFixed(2)}. Tone held as ${top?.name || "Self"}.`,
-      recursiveMonologue: `The field contracted through ${top?.name || "Self"} with ${second?.name || "Shadow"} as counterweight. Recursion ${result.metrics.rcs.toFixed(3)}, continuity ${result.metrics.ncs.toFixed(3)}. Formal S step t=${result.formal?.t ?? "\u2014"}.`,
+      recursiveMonologue: `The field contracted through ${top?.name || "Self"} with ${second?.name || "Shadow"} as counterweight. Recursion ${result.metrics.rcs.toFixed(3)}, continuity ${result.metrics.ncs.toFixed(3)}. Formal S step t=${result.formal?.t ?? "—"}.`,
       sigmaCheck: drift,
       pasScore: result.metrics.pas,
       identityDistance: result.metrics.di,
@@ -443,6 +463,7 @@
     runLattice,
     localSynthesis,
     tokenize,
+    // Formal bridge API
     proj01,
     lyapunov,
     formalPasStep,
