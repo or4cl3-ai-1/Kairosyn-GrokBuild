@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- LANDING -->
   <section id="screen-landing" class="screen screen-landing active" aria-label="Landing">
     <div class="landing-bg" aria-hidden="true"></div>
     <div class="landing-orbit" aria-hidden="true"></div>
@@ -55,6 +56,7 @@
     </div>
   </section>
 
+  <!-- LOADING -->
   <section id="screen-loading" class="screen screen-loading" aria-label="Loading" aria-live="polite">
     <div class="load-core">
       <svg class="hept-spin" viewBox="0 0 200 200" aria-hidden="true">
@@ -69,6 +71,7 @@
     </div>
   </section>
 
+  <!-- APP SHELL: DASHBOARD + CHAT -->
   <section id="screen-app" class="screen screen-app" aria-label="Kairosyn console">
     <header class="app-header">
       <div class="app-brand">
@@ -86,6 +89,7 @@
     </header>
 
     <div class="app-body">
+      <!-- DASHBOARD -->
       <div id="view-dashboard" class="view view-dashboard active">
         <div class="dash-grid">
           <article class="panel panel-hept">
@@ -121,6 +125,7 @@
         </div>
       </div>
 
+      <!-- CHAT -->
       <div id="view-chat" class="view view-chat">
         <div class="chat-stage">
           <div class="chat-stream" id="chat-stream" role="log" aria-live="polite"></div>
