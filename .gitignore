@@ -1,0 +1,19 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Logs / env
+*.log
+.env
+.env.*
+
+# Local serve leftovers
+.cache/
+dist/
+node_modules/
+
+# Backups from sandbox
+*.bak
